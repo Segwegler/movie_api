@@ -1,2 +1,6 @@
 
 node_modules/
+.eslintrc
+doc.txt
+package-lock.json
+package.json
