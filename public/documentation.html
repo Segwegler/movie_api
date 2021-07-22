@@ -28,96 +28,103 @@
       </div>
       <div class="row">
         <div class="col border">Retrieve information on a specific movie</div>
-        <div class="col border">/movies/[name]</div>
+        <div class="col border">/movies/[Title]</div>
         <div class="col border">GET</div>
         <div class="col-3 border">None</div>
         <div class="col-3 border">A JSON object with information on a specific movie<br>
-                                  {<br>
-                                  &ensp;"name":"The Princess Bride",<br>
-                                  &ensp;"director":"Rob Reiner",<br>
-                                  &ensp;"description":"A story about fighting for true love",<br>
-                                  &ensp;"genre":"Romance/Action/Comedy"<br>
-                                  }
+          {<br>
+            &ensp;"Genre": {<br>
+              &ensp;&ensp;"Name": "Adventure",<br>
+              &ensp;&ensp;"Description": "Adventure films are a genre..."<br>
+            &ensp;},<br>
+            &ensp;"Actors": [],<br>
+            &ensp;"_id": "60f276f0f71d2ccd5ce99768",<br>
+            &ensp;"Title": "The Princess Bride",<br>
+            &ensp;"Description": "A fairy tale adventure...",<br>
+            &ensp;"Director": {<br>
+              &ensp;&ensp;"Name": "Rob Reiner",<br>
+              &ensp;&ensp;"Bio": "Robert Norman Reiner...",<br>
+              &ensp;&ensp;"Birth": "1947",<br>
+              &ensp;&ensp;"Death": "0"<br>
+            &ensp;}<br>
+          }
         </div>
       </div>
       <div class="row">
-        <div class="col border">Get the genre of a movie returns a string</div>
-        <div class="col border">/movies/[name]/genre</div>
+        <div class="col border">Get information about a Genre</div>
+        <div class="col border">/movies/genre/[Name]</div>
         <div class="col border">GET</div>
         <div class="col-3 border">None</div>
-        <div class="col-3 border">Text response containing genre</div>
+        <div class="col-3 border">Json Object containg info about a Genre<br>
+          {<br>
+            &ensp;&ensp;"Name": "Adventure",<br>
+            &ensp;&ensp;"Description": "Adventure films are a genre...."<br>
+          }<br>
+        </div>
       </div>
       <div class="row">
         <div class="col border">Get information on a director by there name</div>
-        <div class="col border">/director/[name]</div>
+        <div class="col border">/movies/director/[name]</div>
         <div class="col border">GET</div>
         <div class="col-3 border">None</div>
         <div class="col-3 border">A JSON object containg information about a director<br>
-                                  {<br>
-                                  &ensp;"name":"Joe Smith",<br>
-                                  &ensp;"dob":"12-25-1499",<br>
-                                  &ensp;"dod":"12-25-5523",<br>
-                                  &ensp;"bio":"Was alive then died along time after"<br>
-                                  }
+          {<br>
+            &ensp;&ensp;"Name": "Rob Reiner",<br>
+            &ensp;&ensp;"Bio": "Robert Norman Reiner...",<br>
+            &ensp;&ensp;"Birth": "1947",<br>
+            &ensp;&ensp;"Death": "0"<br>
+          }<br>
 
         </div>
       </div>
       <div class="row">
         <div class="col border">Add a new user</div>
-        <div class="col border">/user</div>
+        <div class="col border">/users</div>
         <div class="col border">POST</div>
         <div class="col-3 border">A JSON object with user data ex:<br>
                                 {<br>
-                                &ensp;"name":"Joan Hubert",<br>
-                                &ensp;"username":"moviesmoviesmovies",<br>
-                                &ensp;"dob": "4-1-1875",<br>
-                                &ensp;"email": "name@example.com",<br>
-                                &ensp;"password": "Pa%%w0rd"<br>
+                                &ensp;"Username":"moviesmoviesmovies",<br>
+                                &ensp;"birthday": "4-1-1875",<br>
+                                &ensp;"Email": "name@example.com",<br>
+                                &ensp;"Password": "Pa%%w0rd"<br>
                                 }
 
         </div>
-        <div class="col-3 border">Text message to confirm the creation of the account</div>
+        <div class="col-3 border">A json object with the new users information will be sent back if successful</div>
       </div>
       <div class="row">
         <div class="col border">Modify user information</div>
-        <div class="col border">/user</div>
+        <div class="col border">/users/[Username]</div>
         <div class="col border">PUT</div>
         <div class="col-3 border">A JSON object with data to update. ex:<br>
                                 {<br>
-                                &ensp;"id":"123456",<br>
-                                &ensp;"username":"filmsfilmsfilms",<br>
-                                &ensp;"email":jhubert@example.com
+                                &ensp;"Username":"filmsfilmsfilms",<br>
+                                &ensp;"Email":jhubert@example.com,<br>
+                                &ensp;"Password":"asdfaw!3451",<br>
+                                &ensp;"Birthday":"2011-1-1"<br>
                                 }
         </div>
         <div class="col-3 border">Text response confirming the change</div>
       </div>
       <div class="row">
         <div class="col border">Adds the name of a movie to the list of favorites</div>
-        <div class="col border">/user/list/</div>
+        <div class="col border">/users/[Username/movies/[MovieID]</div>
         <div class="col border">PUT</div>
-        <div class="col-3 border">A JSON object with data to update. ex:<br>
-                                {<br>
-                                &ensp;"id":"123456",<br>
-                                &ensp;"movie":"John Wick"<br>
-                                }
+        <div class="col-3 border">None
         </div>
-        <div class="col-3 border">Text response confirming addition of movie to list</div>
+        <div class="col-3 border">The Json of the updated object</div>
       </div>
       <div class="row">
         <div class="col border">Adds the name of a movie to the list of favorites</div>
-        <div class="col border">/user/list/</div>
+        <div class="col border">/users/[Username/movies/[MovieID]</div>
         <div class="col border">DELETE</div>
-        <div class="col-3 border">A JSON object with data to update. ex:<br>
-                                {<br>
-                                &ensp;"id":"123456",<br>
-                                &ensp;"movie":"John Wick"<br>
-                                }
+        <div class="col-3 border">None
         </div>
-        <div class="col-3 border">Text response confirming movie was removed from list</div>
+        <div class="col-3 border">The Json of the updated object</div>
       </div>
       <div class="row">
         <div class="col border">Delete a user</div>
-        <div class="col border">/user/[id]</div>
+        <div class="col border">/user/[Username]</div>
         <div class="col border">DELETE</div>
         <div class="col-3 border">None</div>
         <div class="col-3 border">Text message to confirm the removal of user data</div>
