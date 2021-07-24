@@ -57,13 +57,12 @@ app.get("/movies/genre/:Genre", (req, res) => {
   });
 });
 
-app.get("/movies/director/:name", (req, res) => {
-  Movies.findOne({"Director.Name": req.params.name}).then((movie) =>{
+app.get("/movies/director/:Name", (req, res) => {
+  Movies.findOne({"Director.Name": req.params.Name}).then((movie) =>{
     if(movie){
-      //res.status(200).json(movie);
       res.status(200).json(movie.Director);
     }else{
-      res.status(400).send(`Director: ${req.params.name}  not found`);
+      res.status(400).send(`Director: ${req.params.Name}  not found`);
     }
   }).catch((error) =>{
     console.error(error);
