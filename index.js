@@ -17,9 +17,14 @@ const app = express();
 
 app.use(bodyParser.json());
 
+let auth = require("./auth")(app);
+const passport = require("passport");
+require("./passport");
+
+
 app.use(morgan("common"));
 
-app.get("/movies", (req, res)=> {
+app.get("/movies",passport.authenticate("jwt",{session:false}), (req, res)=> {
   Movies.find().then((movies) => {
     res.status(200).json(movies);
   }).catch((error) => {
@@ -28,7 +33,7 @@ app.get("/movies", (req, res)=> {
   });
 });
 
-app.get("/movies/:title", (req, res)=>{
+app.get("/movies/:title",passport.authenticate("jwt",{session:false}), (req, res)=>{
   //res.json(movies.find((movie) => { return movie.name === req.params.title }));
   Movies.findOne({Title: req.params.title}).then((movie) => {
     if(movie){
@@ -44,7 +49,7 @@ app.get("/movies/:title", (req, res)=>{
 
 });
 
-app.get("/movies/genre/:Genre", (req, res) => {
+app.get("/movies/genre/:Genre", passport.authenticate("jwt",{session:false}), (req, res) => {
   Movies.findOne({"Genre.Name": req.params.Genre}).then((movie) =>{
     if(movie){
       res.status(200).json(movie.Genre);
@@ -57,7 +62,7 @@ app.get("/movies/genre/:Genre", (req, res) => {
   });
 });
 
-app.get("/movies/director/:Name", (req, res) => {
+app.get("/movies/director/:Name", passport.authenticate("jwt",{session:false}), (req, res) => {
   Movies.findOne({"Director.Name": req.params.Name}).then((movie) =>{
     if(movie){
       res.status(200).json(movie.Director);
@@ -103,7 +108,7 @@ app.post("/users", (req, res) => {
 });
 
 
-app.put("/users/:Username", (req, res) => {
+app.put("/users/:Username", passport.authenticate("jwt",{session:false}), (req, res) => {
   let update = {};
   if(req.body.Username)
     update.Username = req.body.Username;
@@ -130,7 +135,7 @@ app.put("/users/:Username", (req, res) => {
 
 //get users
 //ffor testing
-app.get("/users", (req, res) => {
+app.get("/users", passport.authenticate("jwt",{session:false}), (req, res) => {
   Users.find().then((users) => {res.status(201).json(users);
   }).catch((error) =>{
     console.error(error);
@@ -138,10 +143,12 @@ app.get("/users", (req, res) => {
   });
 });
 
-app.get("/users/:Username", (req,res) => {
+//Get a single users data back
+app.get("/users/:Username", passport.authenticate("jwt",{session:false}), (req,res) => {
   Users.findOne({Username: req.params.Username}).then((user) => {
     if(user){
       res.status(200).json(user);
+
     }else{
       res.status(404).send("User not found");
     }
@@ -152,7 +159,7 @@ app.get("/users/:Username", (req,res) => {
 })
 
 //add a movie to a users favorites list
-app.post("/users/:Username/movies/:MovieID", (req, res) =>{
+app.post("/users/:Username/movies/:MovieID", passport.authenticate("jwt",{session:false}), (req, res) =>{
   Users.findOneAndUpdate(
     {Username: req.params.Username},
     {$push: {FavoriteMovies: req.params.MovieID}},
@@ -169,7 +176,7 @@ app.post("/users/:Username/movies/:MovieID", (req, res) =>{
 });
 
 //remove a movie to a users favorites list
-app.delete("/users/:Username/movies/:MovieID", (req, res) =>{
+app.delete("/users/:Username/movies/:MovieID", passport.authenticate("jwt",{session:false}), (req, res) =>{
   Users.findOneAndUpdate(
     {Username: req.params.Username},
     {$pull: {FavoriteMovies: req.params.MovieID}},
@@ -185,7 +192,8 @@ app.delete("/users/:Username/movies/:MovieID", (req, res) =>{
   );
 });
 
-app.delete("/users/:Username", (req, res) => {
+//remove a user from the database
+app.delete("/users/:Username", passport.authenticate("jwt",{session:false}), (req, res) => {
   Users.findOneAndRemove({Username: req.params.Username}).then((user) =>{
     if(!user){
       res.status(400).send("User: "+req.params.Username + " was not found");
@@ -198,10 +206,12 @@ app.delete("/users/:Username", (req, res) => {
   });
 });
 
+//get the default page
 app.get("/", (req, res) =>{
   res.send("Welcome to my movie API!<br><a href=\"/documentation.html\">Docs</a>");
 });
 
+//route unknown requests here before sending error if they dont exist
 app.use(express.static("public"));
 
 
