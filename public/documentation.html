@@ -10,6 +10,7 @@
   <body>
     <div class="mx-auto" style="width: 200px;">
       <h1>MyMDB API</h1>
+      <h3> auth token required for all requests exept registering</h3>
     </div>
     <div class="container ">
       <div class="row">
@@ -128,6 +129,13 @@
         <div class="col border">DELETE</div>
         <div class="col-3 border">None</div>
         <div class="col-3 border">Text message to confirm the removal of user data</div>
+      </div>
+      <div class="row">
+        <div class="col border">Login to get token</div>
+        <div class="col border">/login?Username=test&Password=test</div>
+        <div class="col border">POST</div>
+        <div class="col-3 border">None</div>
+        <div class="col-3 border">JSON response with the user data and a token</div>
       </div>
 
     </div><!-- end grid container  -->
