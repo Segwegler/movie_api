@@ -202,9 +202,18 @@ app.get("/users", passport.authenticate("jwt",{session:false}), (req, res) => {
 });
 
 //Get a single users data back
+//returns a json object
+//omits password id and email if the logged in user is looking up someone else
 app.get("/users/:Username", passport.authenticate("jwt",{session:false}), (req,res) => {
+
   Users.findOne({Username: req.params.Username}).then((user) => {
     if(user){
+      if(req.user.Username !== req.params.Username){
+        user = user.toJSON();
+        delete user.Password;
+        delete user._id;
+        delete user.Email;
+      }
       res.status(200).json(user);
 
     }else{
