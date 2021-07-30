@@ -273,6 +273,12 @@ app.delete("/users/:Username/movies/:MovieID", passport.authenticate("jwt",{sess
 
 //remove a user from the database
 app.delete("/users/:Username", passport.authenticate("jwt",{session:false}), (req, res) => {
+  //check that the user making the request owns the account
+  if(req.user.Username !== req.params.Username){
+    console.warn(`User:"${req.user.Username}" tried to acces account information for user:"${req.params.Username}"`)
+    res.status(403).send(`You can not make changes to an account that is not yours`);
+    return;
+  }
   Users.findOneAndRemove({Username: req.params.Username}).then((user) =>{
     if(!user){
       res.status(400).send("User: "+req.params.Username + " was not found");
