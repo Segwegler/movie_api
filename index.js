@@ -93,23 +93,34 @@ app.get("/movies/director/:Name", passport.authenticate("jwt",{session:false}), 
 
 
 //Add a user
-/* We'll expect JSON in this format
-{
-  ID:int,
-  username: string,
-  password: string,
-  email: string,
-  birthday: date,
-}
-*/
-app.post("/users", (req, res) => {
+//expects a json object
+//Username must be alphanumeric
+//Password must be at least 8 characters long
+//Email must be a well formatted email
+app.post("/users",
+  [
+    check("Username","Username is required").not().isEmpty(),
+    check("Username", "Username can only contain letters and numbers").isAlphanumeric(),
+    check("Password","Password must be at least 8 characters long").isLength({min:8}),
+    check("Email","Email does not appear to be valid").isEmail()
+  ], (req, res) => {
+  let errors = validationResult(req);
+
+  if(!errors.isEmpty()){
+    return res.status(422).json({errors: errors.array()});
+  }
+
+  //hashes password so plaintext will not be stored in the database
+  let hashedPassword = Users.hashPassword(req.body.Password);
+
+  //creates user if Username is not already taken
   Users.findOne({Username: req.body.Username}).then((user) => {
     if(user){
       return res.status(400).send(req.body.Username + " already exists");
     }else{
       Users.create({
         Username: req.body.Username,
-        Password: req.body.Password,
+        Password: hashedPassword,
         Email: req.body.Email,
         Birthday: req.body.Birthday
       }).then((user) => {res.status(201).json(user)}).catch((error) => {
@@ -122,7 +133,6 @@ app.post("/users", (req, res) => {
     res.status(500).send("Error: " + error);
   });
 });
-
 
 app.put("/users/:Username", passport.authenticate("jwt",{session:false}), (req, res) => {
   let update = {};
