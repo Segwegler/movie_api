@@ -134,16 +134,38 @@ app.post("/users",
   });
 });
 
-app.put("/users/:Username", passport.authenticate("jwt",{session:false}), (req, res) => {
+//Update user data
+//Expects a Username parameter and json object
+//json object only needs the information that is to be updated
+app.put("/users/:Username",[
+  check("Username", "Username can only contain letters and numbers").optional().isAlphanumeric(),
+  check("Password","Password must be at least 8 characters long").optional().isLength({min:8}),
+  check("Email","Email does not appear to be valid").optional().isEmail()
+], passport.authenticate("jwt",{session:false}), (req, res) => {
+  //check that the user making the request owns the account
+  if(req.user.Username !== req.params.Username){
+    console.warn(`User:"${req.user.Username}" tried to acces account information for user:"${req.params.Username}"`)
+    res.status(403).send("You can not make changes to an account that is not yours");
+    return;
+  }
+  //create an opject to send with the update request
   let update = {};
   if(req.body.Username)
     update.Username = req.body.Username;
   if(req.body.Password)
-    update.Password = req.body.Password;
+    update.Password = Users.hashPassword(req.body.Password);
   if(req.body.Email)
     update.Email = req.body.Email;
   if(req.body.Birthday)
     update.Birthday = req.body.Birthday
+
+  //checks to see if there are errors from validation
+  let errors = validationResult(req);
+  if(!errors.isEmpty()){
+    return res.status(422).json({errors: errors.array()});
+  }
+
+  //sends the update request
   Users.findOneAndUpdate(
     {Username: req.params.Username},
     { $set: update},
@@ -155,7 +177,7 @@ app.put("/users/:Username", passport.authenticate("jwt",{session:false}), (req, 
       }else{
         res.json(updatedUser);
       }
-      }
+    }
   );//end find and update
 });
 
