@@ -182,9 +182,19 @@ app.put("/users/:Username",[
 });
 
 //get users
-//ffor testing
+//returns a json list of users
+//the list that is returned has sensitive information removed ie: Passwordm, _id, and Email
 app.get("/users", passport.authenticate("jwt",{session:false}), (req, res) => {
-  Users.find().then((users) => {res.status(201).json(users);
+  Users.find().lean().then((users) => {
+    //removes private data from being sent to any logged in user
+    users.forEach(function(user){
+      delete user.Password;
+      delete user._id;
+      delete user.Email;
+
+    });
+
+    res.status(200).json(users);
   }).catch((error) =>{
     console.error(error);
     res.status(500).send("error: " + error);
