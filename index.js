@@ -227,6 +227,12 @@ app.get("/users/:Username", passport.authenticate("jwt",{session:false}), (req,r
 
 //add a movie to a users favorites list
 app.post("/users/:Username/movies/:MovieID", passport.authenticate("jwt",{session:false}), (req, res) =>{
+  //check that the user making the request owns the account
+  if(req.user.Username !== req.params.Username){
+    console.warn(`User:"${req.user.Username}" tried to acces account information for user:"${req.params.Username}"`)
+    res.status(403).send(`You can not make changes to an account that is not yours`);
+    return;
+  }
   Users.findOneAndUpdate(
     {Username: req.params.Username},
     {$push: {FavoriteMovies: req.params.MovieID}},
@@ -244,6 +250,12 @@ app.post("/users/:Username/movies/:MovieID", passport.authenticate("jwt",{sessio
 
 //remove a movie to a users favorites list
 app.delete("/users/:Username/movies/:MovieID", passport.authenticate("jwt",{session:false}), (req, res) =>{
+  //check that the user making the request owns the account
+  if(req.user.Username !== req.params.Username){
+    console.warn(`User:"${req.user.Username}" tried to acces account information for user:"${req.params.Username}"`)
+    res.status(403).send(`You can not make changes to an account that is not yours`);
+    return;
+  }
   Users.findOneAndUpdate(
     {Username: req.params.Username},
     {$pull: {FavoriteMovies: req.params.MovieID}},
