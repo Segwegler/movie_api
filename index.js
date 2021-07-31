@@ -33,7 +33,7 @@ app.use(morgan("common"));
 
 //returns a list of all movies
 //returns a json object
-app.get("/movies",passport.authenticate("jwt",{session:false}), (req, res)=> {
+app.get("/movies", (req, res)=> {
   Movies.find().then((movies) => {
     res.status(200).json(movies);
   }).catch((error) => {
@@ -44,7 +44,7 @@ app.get("/movies",passport.authenticate("jwt",{session:false}), (req, res)=> {
 
 //returns specific movie
 //returns a json object
-app.get("/movies/:title",passport.authenticate("jwt",{session:false}), (req, res)=>{
+app.get("/movies/:title", (req, res)=>{
   //res.json(movies.find((movie) => { return movie.name === req.params.title }));
   Movies.findOne({Title: req.params.title}).then((movie) => {
     if(movie){
@@ -62,7 +62,7 @@ app.get("/movies/:title",passport.authenticate("jwt",{session:false}), (req, res
 
 //returns information on a genre
 //returns a json object
-app.get("/movies/genre/:Genre", passport.authenticate("jwt",{session:false}), (req, res) => {
+app.get("/movies/genre/:Genre", (req, res) => {
   Movies.findOne({"Genre.Name": req.params.Genre}).then((movie) =>{
     if(movie){
       res.status(200).json(movie.Genre);
@@ -77,7 +77,7 @@ app.get("/movies/genre/:Genre", passport.authenticate("jwt",{session:false}), (r
 
 //gets information on a director
 //returns a json object
-app.get("/movies/director/:Name", passport.authenticate("jwt",{session:false}), (req, res) => {
+app.get("/movies/director/:Name", (req, res) => {
   Movies.findOne({"Director.Name": req.params.Name}).then((movie) =>{
     if(movie){
       res.status(200).json(movie.Director);
