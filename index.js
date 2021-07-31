@@ -191,7 +191,7 @@ app.get("/users", passport.authenticate("jwt",{session:false}), (req, res) => {
       delete user.Password;
       delete user._id;
       delete user.Email;
-
+      delete user.__v;
     });
 
     res.status(200).json(users);
@@ -213,6 +213,7 @@ app.get("/users/:Username", passport.authenticate("jwt",{session:false}), (req,r
         delete user.Password;
         delete user._id;
         delete user.Email;
+        delete user.__v;
       }
       res.status(200).json(user);
 
