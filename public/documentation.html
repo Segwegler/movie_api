@@ -10,7 +10,6 @@
   <body>
     <div class="mx-auto" style="width: 200px;">
       <h1>MyMDB API</h1>
-      <h3> auth token required for all requests exept registering</h3>
     </div>
     <div class="container ">
       <div class="row">
@@ -79,25 +78,58 @@
         </div>
       </div>
       <div class="row">
+        <div class="col border">Get a list of all users<br>Auth required</div>
+        <div class="col border">/users</div>
+        <div class="col border">GET</div>
+        <div class="col-3 border">None</div>
+        <div class="col-3 border">A JSON object with a list of all users, user object ex:<br>
+                                {<br>
+                                &ensp;"Username":"moviesmoviesmovies",<br>
+                                &ensp;"Birthday": "4-1-1875",<br>
+                                &ensp;"FavoriteMovies":[array of movie ids]<br>
+                                }
+        </div>
+      </div>
+      <div class="row">
+        <div class="col border">Get specific user info<br>Auth required<br>If auth token is not for the user being queried sensitive info will not be shown</div>
+        <div class="col border">/users/:Username</div>
+        <div class="col border">GET</div>
+        <div class="col-3 border">None</div>
+        <div class="col-3 border">User JSON object ex:<br>
+                                  {<br>
+                                  &ensp;"_id": generated uuid,<br>
+                                  &ensp;"Username":"moviesmoviesmovies",<br>
+                                  &ensp;"Birthday": "4-1-1875",<br>
+                                  &ensp;"Email": "name@example.com",<br>
+                                  &ensp;"Password": Hashed Password,<br>
+                                  &ensp;"FavoriteMovies":[array of movie ids],<br>
+                                  &ensp;"__v":0<br>
+                                  }
+        </div>
+      </div>
+      <div class="row">
         <div class="col border">Add a new user</div>
         <div class="col border">/users</div>
         <div class="col border">POST</div>
         <div class="col-3 border">A JSON object with user data ex:<br>
                                 {<br>
                                 &ensp;"Username":"moviesmoviesmovies",<br>
-                                &ensp;"birthday": "4-1-1875",<br>
+                                &ensp;"Birthday": "4-1-1875",<br>
                                 &ensp;"Email": "name@example.com",<br>
-                                &ensp;"Password": "Pa%%w0rd"<br>
+                                &ensp;"Password": "Pa%%w0rd",<br>
+                                &ensp;"FavoriteMovies":[array of movie ids]<br>
                                 }
 
         </div>
         <div class="col-3 border">A json object with the new users information will be sent back if successful</div>
       </div>
       <div class="row">
-        <div class="col border">Modify user information</div>
+        <div class="col border">Modify user information<br>
+                                Auth token required<br>
+        </div>
         <div class="col border">/users/[Username]</div>
         <div class="col border">PUT</div>
-        <div class="col-3 border">A JSON object with data to update. ex:<br>
+        <div class="col-3 border">A JSON object with data to update. Not all fields are required ex:<br>
                                 {<br>
                                 &ensp;"Username":"filmsfilmsfilms",<br>
                                 &ensp;"Email":jhubert@example.com,<br>
@@ -105,10 +137,10 @@
                                 &ensp;"Birthday":"2011-1-1"<br>
                                 }
         </div>
-        <div class="col-3 border">Text response confirming the change</div>
+        <div class="col-3 border">The modified user object</div>
       </div>
       <div class="row">
-        <div class="col border">Adds the name of a movie to the list of favorites</div>
+        <div class="col border">Adds the id of a movie to the list of favorites<br>Auth token required</div>
         <div class="col border">/users/[Username/movies/[MovieID]</div>
         <div class="col border">PUT</div>
         <div class="col-3 border">None
@@ -116,7 +148,7 @@
         <div class="col-3 border">The Json of the updated object</div>
       </div>
       <div class="row">
-        <div class="col border">Adds the name of a movie to the list of favorites</div>
+        <div class="col border">Adds the name of a movie to the list of favorites<br>Auth token required</div>
         <div class="col border">/users/[Username/movies/[MovieID]</div>
         <div class="col border">DELETE</div>
         <div class="col-3 border">None
@@ -124,7 +156,7 @@
         <div class="col-3 border">The Json of the updated object</div>
       </div>
       <div class="row">
-        <div class="col border">Delete a user</div>
+        <div class="col border">Delete a user<br>Auth token required</div>
         <div class="col border">/user/[Username]</div>
         <div class="col border">DELETE</div>
         <div class="col-3 border">None</div>
