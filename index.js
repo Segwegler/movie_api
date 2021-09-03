@@ -19,9 +19,19 @@ mongoose.connect(process.env.CONNECTION_URI, {useNewUrlParser: true, useUnifiedT
 
 const app = express();
 
+let allowedOrigins = ["http://localhost:8080",
+                      "http://localhost:1234",
+                      "https://nsegler-myflix.netlify.app/"];
 
 app.use(cors({
-  origin: "*"
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      let message = 'The CORS policy for this application does not allow access from origin ' + origin;
+      return callback(new Error(message), false);
+    }
+    return callback(null, true);
+  }
 }));
 
 app.use(bodyParser.json());
